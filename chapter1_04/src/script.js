@@ -11,9 +11,13 @@ const scene = new THREE.Scene();
  */
 const group = new THREE.Group();
 scene.add(group);
-group.position.y = 1;
-group.scale.y = 1;
-group.rotation.y = 1;
+group.position.z = 1;
+group.position.x = -2;
+group.position.y = -1;
+group.scale.y = 0.4;
+// group.rotation.y = Math.PI;
+group.rotation.x = Math.PI;
+// group.rotation.z = Math.PI;
 
 const cube1 = new THREE.Mesh(
   new THREE.BoxGeometry(1, 1, 1),
@@ -51,7 +55,7 @@ const sizes = {
  * Camera
  */
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
-camera.position.z = 3;
+camera.position.z = 5;
 scene.add(camera);
 
 /**

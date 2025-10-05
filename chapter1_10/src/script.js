@@ -10,7 +10,7 @@ loadingmanager.onStart = () => {
 };
 
 const textureLoader = new THREE.TextureLoader(loadingmanager);
-const colorTexture = textureLoader.load("/textures/minecraft.png");
+const colorTexture = textureLoader.load("/textures/door/color.jpg");
 const alphaTexture = textureLoader.load("/textures/door/alpha.jpg");
 const heightTexture = textureLoader.load("/textures/door/height.jpg");
 const normalTexture = textureLoader.load("/textures/door/normal.jpg");
@@ -22,8 +22,8 @@ const roughness = textureLoader.load("/textures/door/roughness.jpg");
 
 colorTexture.colorSpace = THREE.SRGBColorSpace;
 
-colorTexture.wrapS = THREE.RepeatWrapping;
-colorTexture.wrapT = THREE.RepeatWrapping;
+// colorTexture.wrapS = THREE.RepeatWrapping;
+// colorTexture.wrapT = THREE.RepeatWrapping;
 colorTexture.center.x = 0.5;
 colorTexture.center.y = 0.5;
 

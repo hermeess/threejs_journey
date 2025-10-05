@@ -1,86 +1,91 @@
 import * as THREE from "three";
+import GUI from "lil-gui";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
-/**
- * Base
- */
-// Canvas
-const canvas = document.querySelector("canvas.webgl");
+//Adding GUI
+const gui = new GUI();
 
-// Scene
+//Scene
 const scene = new THREE.Scene();
 
-// Object
-// const geometry = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2);
+//Canvas
+const canvas = document.querySelector("canvas.webgl");
 
-const geometry = new THREE.BufferGeometry();
+//Textures
+const textureLoaders = new THREE.TextureLoader();
 
-const count = 1000;
-const positionsArray = new Float32Array(count * 3 * 3);
-
-for (let i = 0; i < positionsArray.length; i++) {
-  positionsArray[i] = (Math.random() - 0.5) * (Math.random() - 0.5);
-}
-
-const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3);
-geometry.setAttribute("position", positionsAttribute);
-
-const material = new THREE.MeshBasicMaterial({
-  color: 0xff0000,
-  wireframe: true,
-});
-const mesh = new THREE.Mesh(geometry, material);
-scene.add(mesh);
-
-// Sizes
+//sizes
 const sizes = {
   width: window.innerWidth,
   height: window.innerHeight,
 };
 
 window.addEventListener("resize", () => {
-  // Update sizes
   sizes.width = window.innerWidth;
   sizes.height = window.innerHeight;
 
-  // Update camera
+  //Update camera
   camera.aspect = sizes.width / sizes.height;
   camera.updateProjectionMatrix();
 
-  // Update renderer
+  //Update renders
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
-// Camera
+/**
+ * Objects
+ */
+const bubble = new THREE.Mesh(
+  new THREE.SphereGeometry(1, 32, 16),
+  new THREE.MeshBasicMaterial({
+    wireframe: true,
+  })
+);
+bubble.position.set(0, 0, 0);
+gui.addColor(bubble.material, "color");
+
+scene.add(bubble);
+
+//Camera
 const camera = new THREE.PerspectiveCamera(
-  75,
+  25,
   sizes.width / sizes.height,
   0.1,
   100
 );
-camera.position.z = 0.3;
+camera.position.set(1, 1, 5);
 scene.add(camera);
 
-// Controls
+const axesHelper = new THREE.AxesHelper();
+scene.add(axesHelper);
+
+//Controls
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 
-// Renderer
+//Reneder
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-// Animate
+/**
+ * Animate
+ */
 const clock = new THREE.Clock();
+
+window.addEventListener("keydown", (event) => {
+  if (event.type === "keydown" && event.code === "Space") {
+    //Expand the circle until user release
+    // bubble.
+  }
+});
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
-  if (camera.position.z > 0.02) {
-    camera.position.z -= 0.001;
-  }
+
   // Update controls
   controls.update();
 

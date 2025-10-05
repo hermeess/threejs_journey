@@ -33,17 +33,17 @@ renderer.setSize(sizes.width, sizes.height);
 //Clock
 // const clock = new THREE.Clock();
 
-gsap.to(mesh.position, { x: 2, duration: 1, delay: 1 });
-gsap.to(mesh.position, { x: 0, duration: 1, delay: 1 });
+gsap.to(mesh.position, { x: 2, duration: 2, delay: 2 });
+gsap.to(mesh.position, { x: -2, duration: 1, delay: 1 });
 
 //Animatino
 const tick = () => {
   //Clock
-  //   const elapsedTime = clock.getElapsedTime();
+  // const elapsedTime = clock.getElapsedTime();
 
   //Update the objects
-  //   mesh.position.y = Math.sin(elapsedTime);
-  //   mesh.position.x = Math.cos(elapsedTime);
+  // mesh.position.y = Math.sin(elapsedTime);
+  // mesh.position.x = Math.cos(elapsedTime);
   //Render
   renderer.render(scene, camera);
   window.requestAnimationFrame(tick);

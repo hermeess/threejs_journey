@@ -99,9 +99,9 @@ matcapTexture.colorSpace = THREE.SRGBColorSpace;
 //MeshPhysicaldMaterial
 const material = new THREE.MeshPhysicalMaterial();
 material.metalness = 0;
-material.roughness = 0;
 gui.add(material, "metalness").min(0).max(1).step(0.01);
 gui.add(material, "roughness").min(0).max(1).step(0.01);
+material.roughness = 0;
 
 // material.map = doorColorTexture;
 // material.aoMap = doorAmbientOcclusionTexture;

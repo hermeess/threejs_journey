@@ -18,6 +18,7 @@ const scene = new THREE.Scene();
 const textureLoader = new THREE.TextureLoader();
 const bakedShadow = textureLoader.load("/textures/bakedShadow.jpg");
 bakedShadow.colorSpace = THREE.SRGBColorSpace;
+//This is the simple circular shadow texture
 const simpleShadow = textureLoader.load("/textures/simpleShadow.jpg");
 
 /**
@@ -37,6 +38,7 @@ gui.add(directionalLight.position, "y").min(-5).max(5).step(0.001);
 gui.add(directionalLight.position, "z").min(-5).max(5).step(0.001);
 scene.add(directionalLight);
 
+//This will allow shadow to be casted
 directionalLight.castShadow = true;
 
 directionalLight.shadow.mapSize.width = 1024;
@@ -71,6 +73,7 @@ scene.add(spotLight);
 scene.add(spotLight.target);
 
 const spotLightCameraHelper = new THREE.CameraHelper(spotLight.shadow.camera);
+//To see the camera helper
 spotLightCameraHelper.visible = false;
 scene.add(spotLightCameraHelper);
 
@@ -84,9 +87,10 @@ pointLight.shadow.camera.near = 0.1;
 pointLight.shadow.camera.far = 5;
 
 pointLight.position.set(-1, 1, 0);
-scene.add(pointLight);
+// scene.add(pointLight);
 
 const pointLightCameraHelper = new THREE.CameraHelper(pointLight.shadow.camera);
+//To see the camera helper but add in the shadow.camera property
 pointLightCameraHelper.visible = false;
 scene.add(pointLightCameraHelper);
 /**
@@ -110,6 +114,7 @@ plane.receiveShadow = true;
 
 scene.add(sphere, plane);
 
+//Plan is slightly abobve the plane but below the sphere
 const sphereShadow = new THREE.Mesh(
   new THREE.PlaneGeometry(1.5, 1.5),
   new THREE.MeshBasicMaterial({
@@ -172,6 +177,7 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
+//Note: have to enable the shadow here
 renderer.shadowMap.enabled = false;
 renderer.shadowMap.type = THREE.PCFShadowMap;
 
@@ -191,6 +197,7 @@ const tick = () => {
   //Change the positino of the sphereShadow
   sphereShadow.position.x = sphere.position.x;
   sphereShadow.position.z = sphere.position.z;
+  //This opacity will update for the shadow to be darker when the sphere is closer to the plane
   sphereShadow.material.opacity = (1 - sphere.position.y) * 0.3;
   sphereShadow.scale.x = sphere.position.y * 2;
   sphereShadow.scale.y = sphere.position.y * 2;

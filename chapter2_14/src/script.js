@@ -20,7 +20,7 @@ const scene = new THREE.Scene();
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
 
-// gui.add(ambientLight, "intensity").min(0).max(5).step(0.01);
+gui.add(ambientLight, "intensity").min(0).max(5).step(0.01);
 
 const directionalLight = new THREE.DirectionalLight(0x00ffcc, 1);
 directionalLight.position.set(1, 0.25, 0);
@@ -29,7 +29,7 @@ scene.add(directionalLight);
 const hemishpereLight = new THREE.HemisphereLight(0xff0000, 0x0000ff, 1);
 scene.add(hemishpereLight);
 
-const pointLight = new THREE.PointLight(0xff9000, 1.5, 1);
+const pointLight = new THREE.PointLight(0xff9000, 1.5, .5);
 pointLight.position.set(1, -0.5, 1);
 scene.add(pointLight);
 

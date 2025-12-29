@@ -1,7 +1,8 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import GUI from 'lil-gui'
-
+import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader.js";
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 /**
  * Base
  */
@@ -13,6 +14,60 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+
+/**
+ * Models
+ */
+//loaders 
+const dracoLoader = new DRACOLoader();
+//draco decoder is not even loaded, only load if it is needed
+dracoLoader.setDecoderPath('/draco/');
+
+//Loading doesnt just add it to the scene
+const gltfLoader = new GLTFLoader();
+gltfLoader.setDRACOLoader(dracoLoader);
+// gltfLoader.load(
+//     '/models/Duck/glTF/Duck.gltf', 
+//     (gltf) => {
+//        scene.add(gltf.scene.children[0]);
+//     }
+// );
+
+// gltfLoader.load(
+//     '/models/FlightHelmet/glTF/FlightHelmet.gltf',
+//     (gltf) => {
+//         // scene.add(gltf.scene);
+//         const children = [...gltf.scene.children];
+//         children.forEach((child) => {
+//             scene.add(child);
+//         });
+//         // gui.add(gltf.scene.rotation, 'y').min(- Math.PI).max(Math.PI).step(0.001).name('Helmet Rotation');
+//     }
+// );
+
+// gltfLoader.load(
+//     '/models/Duck/glTF-Draco/Duck.gltf',
+//     (gltf) => {
+//         scene.add(gltf.scene);
+//     }
+// );
+let mixer = null;
+
+
+gltfLoader.load(
+    '/models/Fox/glTF/Fox.gltf',
+    (gltf) => {
+        mixer = new THREE.AnimationMixer(gltf.scene);
+        const action = mixer.clipAction(gltf.animations[2]);
+
+        action.play();
+
+        //update the animation mixer on each frame.
+        
+        gltf.scene.scale.set(0.025,0.025,0.025)
+        scene.add(gltf.scene);
+        //Handle the animations
+})
 
 /**
  * Floor
@@ -104,6 +159,11 @@ const tick = () =>
     const elapsedTime = clock.getElapsedTime()
     const deltaTime = elapsedTime - previousTime
     previousTime = elapsedTime
+
+    //update mixer for animation
+    if(mixer)
+        mixer.update(deltaTime)
+
 
     // Update controls
     controls.update()

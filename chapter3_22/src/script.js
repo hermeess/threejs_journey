@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import GUI from 'lil-gui'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 /**
  * Base
@@ -13,6 +14,8 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+
+
 
 /**
  * Objects
@@ -37,8 +40,28 @@ object3.position.x = 2
 scene.add(object1, object2, object3)
 
 /**
- * Sizes
+ * Raycaster
  */
+
+const raycaster = new THREE.Raycaster();
+
+//Testing a ray
+// const rayOrigin = new THREE.Vector3(-3, 0, 0);
+// const rayDirection = new THREE.Vector3(10, 0, 0);
+// rayDirection.normalize();
+
+// raycaster.set(rayOrigin, rayDirection);
+
+// const intersect = raycaster.intersectObject(object2);
+
+// const intersects = raycaster.intersectObjects([object1, object2, object3]);
+
+// console.log('intersect', intersect);
+// console.log('intersects', intersects);
+
+/**
+ * Sizes
+ */ 
 const sizes = {
     width: window.innerWidth,
     height: window.innerHeight
@@ -59,6 +82,33 @@ window.addEventListener('resize', () =>
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
+/**
+ * Hover
+ */
+
+const mouse = new THREE.Vector2();
+
+window.addEventListener('mousemove', (event) => {
+    mouse.x = (event.clientX / sizes.width) * 2 - 1;
+    mouse.y = - (event.clientY / sizes.height) * 2 + 1;
+});
+
+
+window.addEventListener('click', () => {
+    if(currentIntersect){
+        switch(currentIntersect.object) {
+            case object1:
+                console.log('click on object 1');
+                break;
+            case object2:
+                console.log('click on object 2');
+                break;
+            case object3:
+                console.log('click on object 3');
+                break;
+        }
+    }
+});
 /**
  * Camera
  */
@@ -81,13 +131,95 @@ renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 /**
+ * GLTF Loader
+ */
+//Model
+const gltfLoader = new GLTFLoader();
+let model = null;
+
+gltfLoader.load('/models/Duck/glTF-Binary/Duck.glb', (gltf) => {
+    model = gltf.scene;
+    model.position.y = -1.2;
+    scene.add(model);
+});
+
+/**
+ * Lights
+ */
+
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+scene.add(ambientLight);
+
+const directionalLight = new THREE.DirectionalLight(0xffffff, 2,1);
+directionalLight.position.set(1, 2, 2);
+scene.add(directionalLight);
+
+/**
  * Animate
  */
 const clock = new THREE.Clock()
+let currentIntersect = null;
+
 
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
+
+    //Animate
+    object1.position.y = Math.sin(elapsedTime * 0.3) * 1.5
+    object2.position.y = Math.sin(elapsedTime * 0.8) * 1.5
+    object3.position.y = Math.sin(elapsedTime * 1.4) * 1.5
+
+    //Cast a ray
+    // const rayOrign = new THREE.Vector3(-3, 0, 0);
+    // const rayDirection = new THREE.Vector3(1, 0, 0);
+    // rayDirection.normalize();
+    // raycaster.set(rayOrign, rayDirection);
+
+    // const intersects = raycaster.intersectObjects([object1, object2, object3]);
+    // for(const intersect of [object1, object2, object3]) {
+    //     if(intersects?.find(i => i?.object === intersect)) {
+    //         intersect?.material.color.set('#ffff00');
+    //     } else {
+    //         intersect?.material.color.set('red');
+    //     }
+    // }
+
+    raycaster.setFromCamera(mouse, camera);
+
+    const intersects = raycaster.intersectObjects([object1, object2, object3]);
+    for(const intersect of [object1, object2, object3]) {
+        if(intersects?.find(i => i?.object === intersect)) {
+            intersect?.material.color.set('#ffff00');
+        } else {
+            intersect?.material.color.set('red');
+        }
+    }
+
+    if(intersects.length) {
+        if(currentIntersect === null) {
+            console.log('mouse enter');
+        }
+        currentIntersect = intersects[0];
+    } else {
+        if(currentIntersect) {
+            console.log('mouse leave');
+        }
+        currentIntersect = null;
+    }
+
+
+    //check if the duck is intersected
+    if(model){
+        const modelIntersect = raycaster.intersectObject(model);
+        console.log(modelIntersect)
+        if(modelIntersect.length) {
+            model.scale.set(1.2, 1.2, 1.2);
+        } else {
+            model.scale.set(1, 1, 1);
+        }
+    }
+
 
     // Update controls
     controls.update()

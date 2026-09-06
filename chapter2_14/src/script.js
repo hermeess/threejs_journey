@@ -33,6 +33,7 @@ const pointLight = new THREE.PointLight(0xff9000, 1.5, .5);
 pointLight.position.set(1, -0.5, 1);
 scene.add(pointLight);
 
+//standard material and physical material only
 const rectAreaLight = new THREE.RectAreaLight(0x4e00ff, 6, 1, 1);
 rectAreaLight.position.set(-1.5, 0, 1.5);
 rectAreaLight.lookAt(new THREE.Vector3());
